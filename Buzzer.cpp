@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2018-2019 Tim Hawes
+//
+// SPDX-License-Identifier: MIT
+
 #include <Buzzer.hpp>
 
 Buzzer::Buzzer(int pin, bool modulate, double default_frequency)

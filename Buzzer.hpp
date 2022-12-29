@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2018-2019 Tim Hawes
+//
+// SPDX-License-Identifier: MIT
+
 #ifndef BUZZER_HPP
 #define BUZZER_HPP
 

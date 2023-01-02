@@ -1,10 +1,10 @@
 {
     "name": "Buzzer",
-    "version": "0.0.0-20221229",
+    "version": "0.0.0-20230102",
     "description": "Arduino library for managing a buzzer or piezo sounder",
     "keywords": [],
     "frameworks": ["arduino"],
-    "platforms": ["espressif8266"],
+    "platforms": ["espressif8266", "espressif32"],
     "license": "MIT",
     "authors": [
         {

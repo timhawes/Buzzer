@@ -27,14 +27,22 @@ void Buzzer::beep(unsigned int ms)
     } else {
         digitalWrite(_pin, HIGH);
     }
+#ifdef ESP8266
     ticker.once_ms(ms, std::bind(&Buzzer::stop, this));
+#else
+    ticker.once_ms(ms, +[](Buzzer* buzzer) { buzzer->stop(); }, this);
+#endif
 }
 
 void Buzzer::beep(unsigned int ms, double frequency)
 {
     active = true;
     tone(_pin, frequency);
+#ifdef ESP8266
     ticker.once_ms(ms, std::bind(&Buzzer::stop, this));
+#else
+    ticker.once_ms(ms, +[](Buzzer* buzzer) { buzzer->stop(); }, this);
+#endif
 }
 
 void Buzzer::chirp()
@@ -86,7 +94,11 @@ void Buzzer::next_note()
         } else {
             tone(_pin, current_playlist[playlist_position].frequency);
         }
+#ifdef ESP8266
         ticker.once_ms(current_playlist[playlist_position].ms, std::bind(&Buzzer::next_note, this));
+#else
+        ticker.once_ms(current_playlist[playlist_position].ms, +[](Buzzer* buzzer) { buzzer->next_note(); }, this);
+#endif
         playlist_position++;
     } else {
         stop();

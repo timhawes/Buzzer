@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018-2019 Tim Hawes
+// SPDX-FileCopyrightText: 2018-2023 Tim Hawes
 //
 // SPDX-License-Identifier: MIT
 
@@ -9,6 +9,20 @@ Buzzer::Buzzer(int pin, bool modulate, double default_frequency)
     _pin = pin;
     _modulate = modulate;
     _default_frequency = default_frequency;
+#ifdef ESP8266
+    ticker.attach_ms(5, std::bind(&Buzzer::callback, this));
+#else
+    ticker.attach_ms(5, +[](Buzzer* buzzer) { buzzer->callback(); }, this));
+#endif
+}
+
+void Buzzer::callback()
+{
+    if (playlist_active && (long)(millis() - next_change) >= 0) {
+        next_note();
+    } else if (active && (long)(millis() - next_change) >= 0) {
+        stop();
+    }
 }
 
 void Buzzer::stop()
@@ -21,28 +35,20 @@ void Buzzer::stop()
 void Buzzer::beep(unsigned int ms)
 {
     noTone(_pin);
+    next_change = millis() + ms;
     active = true;
     if (_modulate) {
         tone(_pin, _default_frequency);
     } else {
         digitalWrite(_pin, HIGH);
     }
-#ifdef ESP8266
-    ticker.once_ms(ms, std::bind(&Buzzer::stop, this));
-#else
-    ticker.once_ms(ms, +[](Buzzer* buzzer) { buzzer->stop(); }, this);
-#endif
 }
 
 void Buzzer::beep(unsigned int ms, double frequency)
 {
     active = true;
+    next_change = millis() + ms;
     tone(_pin, frequency);
-#ifdef ESP8266
-    ticker.once_ms(ms, std::bind(&Buzzer::stop, this));
-#else
-    ticker.once_ms(ms, +[](Buzzer* buzzer) { buzzer->stop(); }, this);
-#endif
 }
 
 void Buzzer::chirp()
@@ -94,11 +100,7 @@ void Buzzer::next_note()
         } else {
             tone(_pin, current_playlist[playlist_position].frequency);
         }
-#ifdef ESP8266
-        ticker.once_ms(current_playlist[playlist_position].ms, std::bind(&Buzzer::next_note, this));
-#else
-        ticker.once_ms(current_playlist[playlist_position].ms, +[](Buzzer* buzzer) { buzzer->next_note(); }, this);
-#endif
+        next_change = millis() + current_playlist[playlist_position].ms;
         playlist_position++;
     } else {
         stop();

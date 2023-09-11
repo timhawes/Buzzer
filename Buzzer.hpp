@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018-2019 Tim Hawes
+// SPDX-FileCopyrightText: 2018-2023 Tim Hawes
 //
 // SPDX-License-Identifier: MIT
 
@@ -25,6 +25,9 @@ private:
     int playlist_position;
     int playlist_size;
     bool playlist_active = false;
+    unsigned long next_change;
+    bool tone_active = false;
+    void callback();
     void stop();
     void next_note();
     bool active = false;

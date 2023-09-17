@@ -71,7 +71,6 @@ void Buzzer::play(buzzer_note *playlist)
     playlist_position = 0;
     playlist_active = true;
     active = true;
-    next_note();
 }
 
 void Buzzer::next_note()

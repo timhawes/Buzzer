@@ -68,6 +68,7 @@ void Buzzer::click()
 void Buzzer::play(buzzer_note *playlist)
 {
     current_playlist = playlist;
+    next_change = millis();
     playlist_position = 0;
     playlist_active = true;
     active = true;

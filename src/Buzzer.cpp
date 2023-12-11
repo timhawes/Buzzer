@@ -12,7 +12,7 @@ Buzzer::Buzzer(int pin, bool modulate, double default_frequency)
 #ifdef ESP8266
     ticker.attach_ms(5, std::bind(&Buzzer::callback, this));
 #else
-    ticker.attach_ms(5, +[](Buzzer* buzzer) { buzzer->callback(); }, this));
+    ticker.attach_ms(5, +[](Buzzer* buzzer) { buzzer->callback(); }, this);
 #endif
 }
 

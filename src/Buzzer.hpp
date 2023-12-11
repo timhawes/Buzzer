@@ -32,8 +32,10 @@ private:
     void next_note();
     bool active = false;
     const int max_note_length = 5000;
+    bool ready = false;
 public:
     Buzzer(int pin, bool modulate=false, double default_frequency=2000);
+    void begin();
     void beep(unsigned int ms);
     void beep(unsigned int ms, double frequency);
     void chirp();

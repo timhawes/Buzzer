@@ -1,6 +1,6 @@
 {
     "name": "Buzzer",
-    "version": "0.0.0-20230911",
+    "version": "0.0.0-20231211",
     "description": "Arduino library for managing a buzzer or piezo sounder",
     "keywords": [],
     "frameworks": ["arduino"],

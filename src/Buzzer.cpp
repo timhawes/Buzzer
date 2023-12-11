@@ -9,11 +9,15 @@ Buzzer::Buzzer(int pin, bool modulate, double default_frequency)
     _pin = pin;
     _modulate = modulate;
     _default_frequency = default_frequency;
+}
+
+void Buzzer::begin() {
 #ifdef ESP8266
     ticker.attach_ms(5, std::bind(&Buzzer::callback, this));
 #else
     ticker.attach_ms(5, +[](Buzzer* buzzer) { buzzer->callback(); }, this);
 #endif
+    ready = true;
 }
 
 void Buzzer::callback()
@@ -34,6 +38,9 @@ void Buzzer::stop()
 
 void Buzzer::beep(unsigned int ms)
 {
+    if (!ready) {
+        return;
+    }
     noTone(_pin);
     next_change = millis() + ms;
     active = true;
@@ -46,6 +53,9 @@ void Buzzer::beep(unsigned int ms)
 
 void Buzzer::beep(unsigned int ms, double frequency)
 {
+    if (!ready) {
+        return;
+    }
     active = true;
     next_change = millis() + ms;
     tone(_pin, frequency);
@@ -53,11 +63,17 @@ void Buzzer::beep(unsigned int ms, double frequency)
 
 void Buzzer::chirp()
 {
+    if (!ready) {
+        return;
+    }
     beep(1);
 }
 
 void Buzzer::click()
 {
+    if (!ready) {
+        return;
+    }
     if (!active) {
         digitalWrite(_pin, HIGH);
         delayMicroseconds(50);
@@ -67,6 +83,9 @@ void Buzzer::click()
 
 void Buzzer::play(buzzer_note *playlist)
 {
+    if (!ready) {
+        return;
+    }
     current_playlist = playlist;
     next_change = millis();
     playlist_position = 0;
